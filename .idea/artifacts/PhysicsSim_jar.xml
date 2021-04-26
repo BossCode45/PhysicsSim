@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PhysicsSim:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PhysicsSim_jar</output-path>
+    <root id="archive" name="PhysicsSim.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/out/artifacts/PhysicsSim_jar/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="PhysicsSim" />
+    </root>
+  </artifact>
+</component>
