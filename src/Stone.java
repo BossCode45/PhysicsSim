@@ -1,7 +1,5 @@
-import jdk.jfr.Name;
 import java.awt.*;
 
-@Name("Stone")
 public class Stone extends Cell
 {
     public Stone(int x, int y)

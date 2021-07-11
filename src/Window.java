@@ -1,23 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.util.ArrayList;
+import java.awt.event.*;
 
 public class Window extends JPanel
 {
-    public int button = 0;
-    public ArrayList<int[]> particlePlacements = new ArrayList<>();
+    public int selectedType = 0;
     public boolean mousePressed = false;
     public Window()
     {
         setFocusable(true);
+        setPreferredSize(new Dimension(400, 400));
         addKeyListener(new KeyboardInput());
         addMouseListener(new MouseInput());
         addMouseMotionListener(new MouseMotionInput());
-        setPreferredSize(new Dimension(400, 400));
     }
 
     @Override
@@ -29,8 +24,7 @@ public class Window extends JPanel
         {
             for(Cell cell : cells)
             {
-                if(!cell.empty)
-                    cell.draw(g);
+                cell.draw(g);
             }
         }
     }
@@ -38,6 +32,13 @@ public class Window extends JPanel
 
 class KeyboardInput extends KeyAdapter
 {
+    @Override
+    public void keyTyped(KeyEvent e)
+    {
+        Main.window.selectedType++;
+        if(Main.window.selectedType>5)
+            Main.window.selectedType=0;
+    }
 }
 
 class MouseInput extends MouseAdapter
@@ -46,32 +47,20 @@ class MouseInput extends MouseAdapter
     public void mousePressed(MouseEvent e)
     {
         Main.window.mousePressed = true;
-        Main.window.button = e.getButton();
     }
 
     @Override
     public void mouseReleased(MouseEvent e)
     {
         Main.window.mousePressed = false;
-        Main.window.button = e.getButton();
     }
 
     @Override
     public void mouseClicked(MouseEvent e)
     {
-        try
-        {
-            if (e.getButton()==1)
-            {
-                Main.cells[e.getX() / 4][e.getY() / 4] = new Stone(e.getX() / 4, e.getY() / 4);
-            } else
-            {
-                Main.cells[e.getX() / 4][e.getY() / 4] = new Sand(e.getX() / 4, e.getY() / 4);
-            }
-        }
-        catch (IndexOutOfBoundsException ignored)
-        {
-        }
+        Main.window.mousePressed = true;
+        Main.spawnCell(e);
+        Main.window.mousePressed = false;
     }
 }
 
@@ -80,36 +69,12 @@ class MouseMotionInput extends MouseMotionAdapter
     @Override
     public void mouseMoved(MouseEvent e)
     {
-        try
-        {
-            if (Main.window.mousePressed && Main.window.button == 1)
-            {
-                Main.cells[e.getX() / 4][e.getY() / 4] = new Stone(e.getX() / 4, e.getY() / 4);
-            } else if (Main.window.mousePressed)
-            {
-                Main.cells[e.getX() / 4][e.getY() / 4] = new Sand(e.getX() / 4, e.getY() / 4);
-            }
-        }
-        catch (IndexOutOfBoundsException ignored)
-        {
-        }
+        Main.spawnCell(e);
     }
 
     @Override
     public void mouseDragged(MouseEvent e)
     {
-        try
-        {
-            if (Main.window.mousePressed && Main.window.button == 1)
-            {
-                Main.cells[e.getX() / 4][e.getY() / 4] = new Stone(e.getX() / 4, e.getY() / 4);
-            } else if (Main.window.mousePressed)
-            {
-                Main.cells[e.getX() / 4][e.getY() / 4] = new Sand(e.getX() / 4, e.getY() / 4);
-            }
-        }
-        catch (IndexOutOfBoundsException ignored)
-        {
-        }
+        Main.spawnCell(e);
     }
 }
