@@ -36,7 +36,7 @@ class KeyboardInput extends KeyAdapter
     public void keyTyped(KeyEvent e)
     {
         Main.window.selectedType++;
-        if(Main.window.selectedType>5)
+        if(Main.window.selectedType>6)
             Main.window.selectedType=0;
     }
 }

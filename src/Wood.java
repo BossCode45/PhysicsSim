@@ -6,7 +6,7 @@ public class Wood extends Cell
     {
         super(x, y);
 
-        flamability = 0.5;
+        flammability = 0.1;
         startTicksUntilFireDeath = 200;
         canSetCellsOnFire = true;
 

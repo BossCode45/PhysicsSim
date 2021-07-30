@@ -6,7 +6,7 @@ public class Cell
     public double liquidWeight = 0;
     public int lastUpdateFrame = -1;
     public int x, y;
-    public double flamability = 0;
+    public double flammability = 0;
     public boolean empty = false;
     public String cellTypeName;
     public boolean onFire = false;
@@ -16,22 +16,20 @@ public class Cell
     int currSideMove = 0;
     int currVerticalMove = 0;
     int updatesThisFrame = 0;
-    int id;
     public int startTicksUntilFireDeath = 1;
     int ticksUntilFireDeath = 1;
     boolean canSetCellsOnFire = false;
-    public static int idCounter = 1;
-    private long lastChangedID;
-    private long newChangedID = 0;
+    boolean canSetSameTypeOnFire = false;
+    private boolean changed = false;
     public Cell(int x, int y)
     {
-        id = idCounter;
-        idCounter++;
         this.x = x;
         this.y = y;
         cellTypeName = getClass().getName();
         if(cellTypeName.equals("Cell"))
+        {
             empty = true;
+        }
         if(Math.random()>0.5)
             moveMult=1;
         else
@@ -40,8 +38,7 @@ public class Cell
 
     public void updateWrapper(int frame)
     {
-        long ID = newChangedID;
-        newChangedID++;
+        changed = false;
         if(frame!=lastUpdateFrame)
         {
             currSideMove = 0;
@@ -58,14 +55,16 @@ public class Cell
         if(onFire&&updatesThisFrame==1)
         {
             ticksUntilFireDeath--;
+            changed = true;
         }
 
         if(ticksUntilFireDeath == 0)
         {
             Main.destroyCell(x, y);
+            changed = true;
         }
 
-        if(onFire&&canSetCellsOnFire&&updatesThisFrame==1)
+        if(onFire&&updatesThisFrame==1)
         {
             for(int x = -1; x < 2; x++)
             {
@@ -77,11 +76,11 @@ public class Cell
                     try
                     {
                         double flam = Math.random();
-                        if(Main.cells[this.x-x][this.y-y].flamability>flam)
+                        if(Main.cells[this.x-x][this.y-y].flammability >flam&&!Main.cells[this.x-x][this.y-y].onFire&&(canSetCellsOnFire||cellTypeName.equals(Main.cells[this.x-x][this.y-y].cellTypeName)&&canSetSameTypeOnFire))
                         {
                             Main.cells[this.x-x][this.y-y].onFire = true;
                             Main.cells[this.x-x][this.y-y].ticksUntilFireDeath = Main.cells[this.x-x][this.y-y].startTicksUntilFireDeath;
-                            changed(id, pX, pY, frame);
+                            changed = true;
                         }
                     }
                     catch(ArrayIndexOutOfBoundsException ignored) {}
@@ -93,17 +92,15 @@ public class Cell
 
 
         if(pX!=x||pY!=y)
-            changed(ID, pX, pY, frame);
+            changed = true;
 
+        doChange(pX, pY, frame);
     }
-
-    private void changed(long ID, int pX, int pY, int frame)
+    private void doChange(int pX, int pY, int frame)
     {
-        if(ID == lastChangedID)
-        {
+
+        if(!changed)
             return;
-        }
-        lastChangedID = ID;
 
         for(int i = -1;i <= 1;i++)
         {

@@ -34,7 +34,11 @@ public class Main
             long t = System.currentTimeMillis();
             for(Cell cell : cellsToUpdate)
             {
-                cell.updateWrapper(updateFrame);
+                try
+                {
+                    cell.updateWrapper(updateFrame);
+                }
+                catch (NullPointerException ignored){}
             }
             cellsToUpdate = cellsToUpdateQueue;
             cellsToUpdateQueue = new ArrayList<>();
@@ -63,6 +67,7 @@ public class Main
                 case 3 -> c = new Water(e.getX() / 4, e.getY() / 4);
                 case 4 -> c = new Wood(e.getX() / 4, e.getY() / 4);
                 case 5 -> c = new Fire(e.getX() / 4, e.getY() / 4);
+                case 6 -> c = new Oil(e.getX() / 4, e.getY() / 4);
                 default -> c = new Stone(e.getX() / 4, e.getY() / 4);
             }
             cells[e.getX() / 4][e.getY() / 4] = c;
