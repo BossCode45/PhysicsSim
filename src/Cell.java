@@ -80,7 +80,7 @@ public class Cell
                         {
                             Main.cells[this.x-x][this.y-y].onFire = true;
                             Main.cells[this.x-x][this.y-y].ticksUntilFireDeath = Main.cells[this.x-x][this.y-y].startTicksUntilFireDeath;
-                            changed = true;
+                            Main.requestUpdate(Main.cells[this.x-x][this.y-y]);
                         }
                     }
                     catch(ArrayIndexOutOfBoundsException ignored) {}
